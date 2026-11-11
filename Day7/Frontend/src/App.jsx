@@ -10,15 +10,15 @@ function App() {
   ]);
 
   axios.get("http://localhost:3000/api/notes").then((res) => {
-    console.log(res.data);
+    setNotes(res.data.notes);
   });
 
   return (
     <>
       <div className="notes">
-        {notes.map((note) => {
+        {notes.map((note, idx) => {
           return (
-            <div className="note">
+            <div key={idx} className="note">
               <h1>{note.title}</h1>
               <p>{note.description}</p>
             </div>
