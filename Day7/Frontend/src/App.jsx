@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 
 function App() {
   const [notes, setNotes] = useState([
@@ -7,6 +8,10 @@ function App() {
     { title: "Test title 3", description: "Test description 3" },
     { title: "Test title 4", description: "Test description 4" },
   ]);
+
+  axios.get("http://localhost:3000/api/notes").then((res) => {
+    console.log(res.data);
+  });
 
   return (
     <>

@@ -30,7 +30,6 @@ html {
 }
 .notes {
   display: flex;
-
   gap: 1rem;
   padding-block: 1rem;
   padding-inline: 3rem;
