@@ -10,6 +10,17 @@ function App() {
     });
   };
 
+  const createNotes = (title, description) => {
+    axios
+      .post("http://localhost:3000/api/notes", {
+        title: title,
+        description: description,
+      })
+      .then((res) => {
+        console.log(res.data);
+      });
+  };
+
   useEffect(() => {
     fetcheNotes();
   }, []);
@@ -19,14 +30,15 @@ function App() {
     const { title, description } = e.target.elements;
     console.log(title.value, description.value);
 
-    axios
-      .post("http://localhost:3000/api/notes", {
-        title: title.value,
-        description: description.value,
-      })
-      .then((res) => {
-        console.log(res.data);
-      });
+    createNotes(title.value, description.value);
+    fetcheNotes();
+  };
+
+  const handleDelete = (id) => {
+    axios.delete("http://localhost:3000/api/notes/" + id).then((res) => {
+      console.log(res.data);
+    });
+    fetcheNotes();
   };
 
   return (
@@ -42,6 +54,13 @@ function App() {
             <div key={idx} className="note">
               <h1>{note.title}</h1>
               <p>{note.description}</p>
+              <button
+                onClick={() => {
+                  handleDelete(note._id);
+                }}
+              >
+                Delete
+              </button>
             </div>
           );
         })}
