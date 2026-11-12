@@ -2,9 +2,10 @@ const express = require("express");
 const cors = require("cors");
 
 const app = express();
+const path = require("path");
 app.use(express.json());
 app.use(cors());
-const path = require("path");
+app.use(express.static("./public"));
 
 const noteModel = require("./models/note.model");
 
