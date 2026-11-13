@@ -5,14 +5,14 @@ function App() {
   const [notes, setNotes] = useState([]);
 
   const fetcheNotes = () => {
-    axios.get("http://localhost:3000/api/notes").then((res) => {
+    axios.get("https://revise-backend-6.onrender.com/api/notes").then((res) => {
       setNotes(res.data.notes);
     });
   };
 
   const createNotes = (title, description) => {
     axios
-      .post("http://localhost:3000/api/notes", {
+      .post("https://revise-backend-6.onrender.com/api/notes", {
         title: title,
         description: description,
       })
@@ -35,9 +35,11 @@ function App() {
   };
 
   const handleDelete = (id) => {
-    axios.delete("http://localhost:3000/api/notes/" + id).then((res) => {
-      console.log(res.data);
-    });
+    axios
+      .delete("https://revise-backend-6.onrender.com/api/notes/" + id)
+      .then((res) => {
+        console.log(res.data);
+      });
     fetcheNotes();
   };
 
