@@ -1,4 +1,4 @@
-require("dotenv").config();
+require("dotenv").config(); // bhool gya tha
 
 const app = require("./src/app");
 const connected = require("./src/config/database");

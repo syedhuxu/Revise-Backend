@@ -52,4 +52,5 @@ app.patch("/api/notes/:id", async (req, res) => {
     note: updatedNote,
   });
 });
+
 module.exports = app;
