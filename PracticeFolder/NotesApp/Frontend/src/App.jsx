@@ -64,13 +64,39 @@ const App = () => {
       console.error("Failed to create note:", err);
     }
   };
+
   const handleDelete = (id) => {
     axios.delete("http://localhost:3000/api/notes/" + id).then((res) => {
       console.log(res.data);
       fetchNotes();
     });
   };
-  const handleUpdate = () => {};
+
+  const startEditing = (note, id) => {
+    setEditingNoteId(id);
+    setUpdatedTitle(note.title);
+    setUpdatedDescription(note.description);
+  };
+  // 2. Use editingNoteId for the URL and map state values to 'title' and 'description'
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    if (!updatedTitle.trim() || !updatedDescription.trim()) return;
+
+    try {
+      await axios.patch(`http://localhost:3000/api/notes/${editingNoteId}`, {
+        title: updatedTitle,
+        description: updatedDescription,
+      });
+
+      // 3. Reset state, close the form, and refresh the list
+      setUpdatedTitle("");
+      setUpdatedDescription("");
+      setEditingNoteId(null);
+      fetchNotes();
+    } catch (err) {
+      console.error("Failed to update note:", err);
+    }
+  };
 
   return (
     <div className="container">
@@ -110,11 +136,14 @@ const App = () => {
               </button>
 
               {}
-              <button type="button" onClick={() => setEditingNoteId(currentId)}>
+              {/* Pass both 'note' and 'currentId' when clicking Update */}
+              <button
+                type="button"
+                onClick={() => startEditing(note, currentId)}
+              >
                 Update
               </button>
 
-              {}
               {editingNoteId === currentId && (
                 <div className="updating-form">
                   <form onSubmit={handleUpdate}>
@@ -126,12 +155,11 @@ const App = () => {
                     />
                     <input
                       type="text"
-                      value={updatedDescription}
                       placeholder="Enter Updated Description"
+                      value={updatedDescription}
                       onChange={(e) => setUpdatedDescription(e.target.value)}
                     />
                     <button type="submit">Save</button>
-                    {}
                     <button
                       type="button"
                       onClick={() => setEditingNoteId(null)}
