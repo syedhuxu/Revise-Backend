@@ -1,10 +1,12 @@
 const express = require("express");
 const noteModel = require("./models/notes.model");
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
 app.use(express.json()); //bhool gya tha
 app.use(cors());
+app.use(express.static("./public"));
 
 app.post("/api/notes", async (req, res) => {
   const { title, description } = req.body;
@@ -53,6 +55,10 @@ app.patch("/api/notes/:id", async (req, res) => {
     message: "Note Updated Successfully",
     note: updatedNote,
   });
+});
+
+app.use("*name", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "/public/index.html"));
 });
 
 module.exports = app;
