@@ -64,7 +64,12 @@ const App = () => {
       console.error("Failed to create note:", err);
     }
   };
-
+  const handleDelete = (id) => {
+    axios.delete("http://localhost:3000/api/notes/" + id).then((res) => {
+      console.log(res.data);
+      fetchNotes();
+    });
+  };
   const handleUpdate = () => {};
 
   return (
@@ -95,7 +100,14 @@ const App = () => {
             <div key={currentId} className="note">
               <h1>{note.title}</h1>
               <p>{note.description}</p>
-              <button type="button">Delete</button>
+              <button
+                type="button"
+                onClick={() => {
+                  handleDelete(note._id);
+                }}
+              >
+                Delete
+              </button>
 
               {}
               <button type="button" onClick={() => setEditingNoteId(currentId)}>
