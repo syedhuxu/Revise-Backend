@@ -1,14 +1,339 @@
-* {
+/* ==========================================================================
+   Notes App Stylesheet — Dark Obsidian & Sage Palette
+   Palette:
+     #14171C  Deep Obsidian (Canvas background)
+     #25282D  Charcoal Slate (Cards & form surface)
+     #37403F  Dark Sage Slate (Inputs, borders, secondary surfaces)
+     #545E56  Mossy Olive (Primary actions & active accents)
+     #818576  Warm Sage Gray (Muted labels, placeholders, subtle borders)
+     #B6B49F  Warm Sand (Primary text, headings, high-contrast highlights)
+   ========================================================================== */
+
+:root {
+  --bg-obsidian: #14171c;
+  --surface-charcoal: #25282d;
+  --surface-sage-dark: #37403f;
+  --accent-moss: #545e56;
+  --text-sage-muted: #818576;
+  --text-sand: #b6b49f;
+
+  --radius-lg: 16px;
+  --radius-md: 10px;
+  --radius-sm: 8px;
+  --transition-fast: 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  --shadow-card:
+    0 10px 30px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(182, 180, 159, 0.06);
+  --shadow-hover:
+    0 16px 36px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(182, 180, 159, 0.12);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-  font-family: Poppins, sans-serif;
 }
+
 html,
 body {
-  height: 100%;
-  width: 100%;
+  min-height: 100%;
+  background-color: var(--bg-obsidian);
+  color: var(--text-sand);
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
-a {
-  text-decoration: none;
+
+body {
+  background-image:
+    radial-gradient(
+      circle at 15% 10%,
+      rgba(55, 64, 63, 0.22) 0%,
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 85% 90%,
+      rgba(84, 94, 86, 0.14) 0%,
+      transparent 45%
+    );
+  background-attachment: fixed;
+}
+
+/* Main Layout Container */
+.container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 4.5rem;
+}
+
+/* ==========================================================================
+   Create Note Form
+   ========================================================================== */
+.container > form {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr auto;
+  gap: 0.875rem;
+  align-items: center;
+  background-color: var(--surface-charcoal);
+  border: 1px solid var(--surface-sage-dark);
+  border-radius: var(--radius-lg);
+  padding: 1.125rem;
+  margin-bottom: 2.5rem;
+  box-shadow: var(--shadow-card);
+}
+
+.container > form input[type="text"],
+.updating-form input[type="text"] {
+  width: 100%;
+  background-color: var(--bg-obsidian);
+  color: var(--text-sand);
+  border: 1px solid var(--surface-sage-dark);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+  outline: none;
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.container > form input[type="text"]::placeholder,
+.updating-form input[type="text"]::placeholder {
+  color: var(--text-sage-muted);
+  opacity: 0.85;
+}
+
+.container > form input[type="text"]:focus,
+.updating-form input[type="text"]:focus {
+  border-color: var(--text-sage-muted);
+  box-shadow: 0 0 0 3px rgba(129, 133, 118, 0.22);
+  background-color: #181c22;
+}
+
+/* Shared Button Base */
+button {
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  padding: 0.72rem 1.25rem;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast),
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+/* Primary Create Button */
+.container > form button[type="submit"] {
+  background-color: var(--accent-moss);
+  color: var(--text-sand);
+  border-color: rgba(182, 180, 159, 0.18);
+  padding: 0.75rem 1.6rem;
+  white-space: nowrap;
+}
+
+.container > form button[type="submit"]:hover {
+  background-color: var(--text-sage-muted);
+  color: var(--bg-obsidian);
+  box-shadow: 0 6px 18px rgba(84, 94, 86, 0.35);
+}
+
+/* ==========================================================================
+   Notes Grid & Cards
+   ========================================================================== */
+.notes-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.note {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  gap: 0.75rem 0.625rem;
+  background-color: var(--surface-charcoal);
+  border: 1px solid var(--surface-sage-dark);
+  border-top: 3px solid var(--accent-moss);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-card);
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.note:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--accent-moss);
+  border-top-color: var(--text-sage-muted);
+}
+
+.note h1 {
+  grid-column: 1 / -1;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-sand);
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+.note p {
+  grid-column: 1 / -1;
+  font-size: 0.95rem;
+  color: rgba(182, 180, 159, 0.82);
+  line-height: 1.6;
+  margin-bottom: 0.5rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Card Action Buttons: Delete (1st) & Update (2nd) */
+.note > button {
+  padding: 0.5rem 0.95rem;
+  font-size: 0.8125rem;
+  border-radius: var(--radius-sm);
+}
+
+/* Delete Button */
+.note > button:first-of-type {
+  grid-column: 1;
+  background-color: transparent;
+  color: var(--text-sage-muted);
+  border-color: var(--surface-sage-dark);
+}
+
+.note > button:first-of-type:hover {
+  background-color: var(--surface-sage-dark);
+  color: var(--text-sand);
+  border-color: var(--text-sage-muted);
+}
+
+/* Update Button */
+.note > button:nth-of-type(2) {
+  grid-column: 2;
+  background-color: var(--surface-sage-dark);
+  color: var(--text-sand);
+  border-color: var(--accent-moss);
+}
+
+.note > button:nth-of-type(2):hover {
+  background-color: var(--accent-moss);
+  color: var(--text-sand);
+  border-color: var(--text-sage-muted);
+}
+
+/* ==========================================================================
+   Inline Edit / Updating Form
+   ========================================================================== */
+.updating-form {
+  grid-column: 1 / -1;
+  margin-top: 0.75rem;
+  padding: 1rem;
+  background-color: var(--bg-obsidian);
+  border: 1px solid var(--surface-sage-dark);
+  border-radius: var(--radius-md);
+  animation: fadeSlideIn 200ms ease-out;
+}
+
+.updating-form form {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  gap: 0.65rem;
+}
+
+.updating-form input[type="text"] {
+  grid-column: 1 / -1;
+  background-color: var(--surface-charcoal);
+  padding: 0.65rem 0.875rem;
+  font-size: 0.875rem;
+}
+
+.updating-form button {
+  padding: 0.5rem 1rem;
+  font-size: 0.8125rem;
+  border-radius: var(--radius-sm);
+  margin-top: 0.2rem;
+}
+
+/* Save Button */
+.updating-form button[type="submit"] {
+  grid-column: 1;
+  background-color: var(--accent-moss);
+  color: var(--text-sand);
+  border-color: rgba(182, 180, 159, 0.2);
+}
+
+.updating-form button[type="submit"]:hover {
+  background-color: var(--text-sage-muted);
+  color: var(--bg-obsidian);
+}
+
+/* Cancel Button */
+.updating-form button[type="button"] {
+  grid-column: 2;
+  background-color: transparent;
+  color: var(--text-sage-muted);
+  border-color: var(--surface-sage-dark);
+}
+
+.updating-form button[type="button"]:hover {
+  background-color: var(--surface-sage-dark);
+  color: var(--text-sand);
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   Responsive Adjustments
+   ========================================================================== */
+@media (max-width: 720px) {
+  .container {
+    padding: 1.75rem 1rem 3rem;
+  }
+
+  .container > form {
+    grid-template-columns: 1fr;
+  }
+
+  .container > form button[type="submit"] {
+    width: 100%;
+  }
+
+  .notes-container {
+    grid-template-columns: 1fr;
+  }
 }
