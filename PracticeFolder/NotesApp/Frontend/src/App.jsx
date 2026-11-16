@@ -3,6 +3,7 @@ import axios from "axios";
 
 const App = () => {
   const [notes, setNotes] = useState([]);
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
@@ -13,10 +14,16 @@ const App = () => {
 
   const fetchNotes = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/api/notes");
+      const res = await axios.get(
+        "https://revised-notes-app.onrender.com//api/notes",
+      );
+
       const notesList = Array.isArray(res.data)
         ? res.data
-        : res.data.notes || [];
+        : Array.isArray(res.data?.notes)
+          ? res.data.notes
+          : [];
+
       setNotes(notesList);
     } catch (err) {
       console.error("Failed to fetch notes:", err);
@@ -28,7 +35,9 @@ const App = () => {
 
     const loadNotes = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/notes");
+        const res = await axios.get(
+          "https://revised-notes-app.onrender.com//api/notes",
+        );
         const notesList = Array.isArray(res.data)
           ? res.data
           : res.data.notes || [];
@@ -53,7 +62,7 @@ const App = () => {
     if (!title.trim() || !description.trim()) return;
 
     try {
-      await axios.post("http://localhost:3000/api/notes", {
+      await axios.post("https://revised-notes-app.onrender.com//api/notes", {
         title,
         description,
       });
@@ -66,10 +75,12 @@ const App = () => {
   };
 
   const handleDelete = (id) => {
-    axios.delete("http://localhost:3000/api/notes/" + id).then((res) => {
-      console.log(res.data);
-      fetchNotes();
-    });
+    axios
+      .delete("https://revised-notes-app.onrender.com//api/notes/" + id)
+      .then((res) => {
+        console.log(res.data);
+        fetchNotes();
+      });
   };
 
   const startEditing = (note, id) => {
@@ -77,18 +88,20 @@ const App = () => {
     setUpdatedTitle(note.title);
     setUpdatedDescription(note.description);
   };
-  // 2. Use editingNoteId for the URL and map state values to 'title' and 'description'
+
   const handleUpdate = async (e) => {
     e.preventDefault();
     if (!updatedTitle.trim() || !updatedDescription.trim()) return;
 
     try {
-      await axios.patch(`http://localhost:3000/api/notes/${editingNoteId}`, {
-        title: updatedTitle,
-        description: updatedDescription,
-      });
+      await axios.patch(
+        `https://revised-notes-app.onrender.com//api/notes/${editingNoteId}`,
+        {
+          title: updatedTitle,
+          description: updatedDescription,
+        },
+      );
 
-      // 3. Reset state, close the form, and refresh the list
       setUpdatedTitle("");
       setUpdatedDescription("");
       setEditingNoteId(null);
@@ -135,8 +148,6 @@ const App = () => {
                 Delete
               </button>
 
-              {}
-              {/* Pass both 'note' and 'currentId' when clicking Update */}
               <button
                 type="button"
                 onClick={() => startEditing(note, currentId)}
