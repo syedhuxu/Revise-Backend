@@ -5,3 +5,5 @@ const connetToDb = () => {
     console.log("Server Connected To Db");
   });
 };
+
+module.exports = connetToDb;
