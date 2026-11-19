@@ -65,7 +65,7 @@ authRouter.post("/login", async (req, res) => {
     },
     process.env.JWT_SECRET,
   );
-  res.cookie("token", token);
+  res.cookie("jwt_token", token);
 
   res.status(200).json({
     message: "User Logged In",
