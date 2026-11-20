@@ -29,4 +29,12 @@ expenseRouter.get("/getExpenses", authMiddleware, async (req, res) => {
   });
 });
 
+expenseRouter.delete("/deleteExpense/:id", authMiddleware, async (req, res) => {
+  const id = req.params.id;
+  const expense = await expenseModel.findByIdAndDelete(id);
+
+  res.status(201).json({
+    message: "Expense Deleted",
+  });
+});
 module.exports = expenseRouter;
