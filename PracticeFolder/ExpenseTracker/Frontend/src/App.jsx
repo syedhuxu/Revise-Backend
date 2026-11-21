@@ -6,6 +6,9 @@ function App() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [loginEmail, setloginEmail] = useState("");
+  const [loginPassword, setloginPassword] = useState("");
+
   const handleRegister = async (e) => {
     e.preventDefault();
     if (!name.trim() || !email.trim() || !password.trim()) return;
@@ -23,10 +26,19 @@ function App() {
     }
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    setEmail("");
-    setPassword("");
+    if (!loginEmail.trim() || !loginPassword.trim()) return;
+    try {
+      await axios.post("http://localhost:3000/api/auth/login", {
+        email: loginEmail,
+        password: loginPassword,
+      });
+      setloginEmail("");
+      setloginPassword("");
+    } catch (err) {
+      console.error("Failed to create note:", err);
+    }
   };
 
   return (
@@ -72,8 +84,20 @@ function App() {
               handleLogin(e);
             }}
           >
-            <input type="email" placeholder="Enter Your Email" />
-            <input type="password" placeholder="Enter Your Password" />
+            <input
+              type="email"
+              value={loginEmail}
+              name="loginEmail"
+              onChange={(e) => setloginEmail(e.target.value)}
+              placeholder="Enter Your Email"
+            />
+            <input
+              type="password"
+              value={loginPassword}
+              name="loginPassword"
+              onChange={(e) => setloginPassword(e.target.value)}
+              placeholder="Enter Your Password"
+            />
             <button>Login</button>
           </form>
         </div>
