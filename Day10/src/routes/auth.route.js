@@ -79,14 +79,13 @@ authRouter.post("/login", async (req, res) => {
         id: user._id,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "1d" }, // Optional: adds token expiration
+      { expiresIn: "1d" },
     );
 
     res.cookie("jwt_token", token, {
-      httpOnly: true, // Prevents client-side JS from reading the cookie
+      httpOnly: true,
     });
 
-    // Exclude password before sending user data back
     const { password: _, ...userWithoutPassword } = user.toObject();
 
     res.status(200).json({

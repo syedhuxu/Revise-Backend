@@ -2,27 +2,43 @@ import { useState } from "react";
 import axios from "axios";
 
 function App() {
+  const [isLoginLoading, setIsLoginLoading] = useState(false);
+  const [isRegisterLoading, setIsRegisterLoading] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [registerError, setRegisterError] = useState("");
 
-  const [loginEmail, setloginEmail] = useState("");
-  const [loginPassword, setloginPassword] = useState("");
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [loginError, setLoginError] = useState("");
 
   const handleRegister = async (e) => {
     e.preventDefault();
     if (!name.trim() || !email.trim() || !password.trim()) return;
     try {
-      await axios.post("http://localhost:3000/api/auth/register", {
+      setIsRegisterLoading(true);
+      const res = await axios.post("http://localhost:3000/api/auth/register", {
         name,
         email,
         password,
       });
+      console.log(res.data);
       setName("");
       setEmail("");
       setPassword("");
+      setRegisterError("");
     } catch (err) {
       console.error("Failed to create note:", err);
+      setRegisterError(
+        err.response?.data?.message ||
+          "Something went wrong. Please try again.",
+      );
+      setName("");
+      setEmail("");
+      setPassword("");
+    } finally {
+      setIsRegisterLoading(false);
     }
   };
 
@@ -30,14 +46,25 @@ function App() {
     e.preventDefault();
     if (!loginEmail.trim() || !loginPassword.trim()) return;
     try {
-      await axios.post("http://localhost:3000/api/auth/login", {
+      setIsLoginLoading(true);
+      const res = await axios.post("http://localhost:3000/api/auth/login", {
         email: loginEmail,
         password: loginPassword,
       });
-      setloginEmail("");
-      setloginPassword("");
+      console.log(res.data);
+      setLoginEmail("");
+      setLoginPassword("");
+      setLoginError("");
     } catch (err) {
       console.error("Failed to create note:", err);
+      setLoginError(
+        err.response?.data?.message ||
+          "Something went wrong. Please try again.",
+      );
+      setLoginEmail("");
+      setLoginPassword("");
+    } finally {
+      setIsLoginLoading(false);
     }
   };
 
@@ -72,7 +99,12 @@ function App() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter Your Password"
             />
-            <button>Create Account</button>
+            <button type="submit" disabled={isRegisterLoading}>
+              {isRegisterLoading ? "Creating Account" : "Create Account"}
+            </button>{" "}
+            {registerError && (
+              <p className="register-error-message">{registerError}</p>
+            )}
           </form>
         </div>
       </div>
@@ -88,17 +120,20 @@ function App() {
               type="email"
               value={loginEmail}
               name="loginEmail"
-              onChange={(e) => setloginEmail(e.target.value)}
+              onChange={(e) => setLoginEmail(e.target.value)}
               placeholder="Enter Your Email"
             />
             <input
               type="password"
               value={loginPassword}
               name="loginPassword"
-              onChange={(e) => setloginPassword(e.target.value)}
+              onChange={(e) => setLoginPassword(e.target.value)}
               placeholder="Enter Your Password"
             />
-            <button>Login</button>
+            <button type="submit" disabled={isLoginLoading}>
+              {isLoginLoading ? "Logging in..." : "Login"}
+            </button>
+            {loginError && <p className="login-error-message">{loginError}</p>}
           </form>
         </div>
       </div>
