@@ -1,25 +1,49 @@
 // --REQUIREMENTS--
 const express = require("express");
 const userModel = require("../models/user.model");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const authRouter = express.Router();
 
-// --REGISTER AP--
+// --REGISTER API--
 authRouter.post("/register", async (req, res) => {
   const { username, email, password, bio, profileImage } = req.body;
 
-  const isUserExistsByEmail = await userModel.findOne({ email });
+  const isUserAlreadyExists = await userModel.findOne({
+    $or: [{ username }, { email }],
+  });
 
-  if (isUserExistsByEmail) {
+  if (isUserAlreadyExists) {
     return res.status(409).json({
-      message: "Email Already In Use",
+      message:
+        "User Already Exists" +
+        (isUserAlreadyExists.email == email ? " By Email" : " By Username"),
     });
   }
-  const isUserExistsByUsername = await userModel.findOne({ username });
 
-  if (isUserExistsByUsername) {
-    return res.status(409).json({
-      message: "Username Already In Use",
-    });
-  }
+  const hashedPassword = await bcrypt.hash(password, 12);
+
+  const user = await userModel.create({
+    username,
+    email,
+    password: hashedPassword,
+    bio,
+    profileImage,
+  });
+
+  const token = jwt.sign(
+    {
+      id: user._id,
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: "1d" },
+  );
+
+  res.cookie("jwt_token", token);
+
+  res.status(201).json({
+    message: "User Created Successfully",
+    user,
+  });
 });
