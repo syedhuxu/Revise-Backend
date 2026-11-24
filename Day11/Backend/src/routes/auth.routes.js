@@ -53,4 +53,36 @@ authRouter.post("/register", async (req, res) => {
   });
 });
 
+// --LOGIN API--
+authRouter.post("/login", async (req, res) => {
+  const { username, email, password } = req.body;
+
+  const user = await userModel.findOne({
+    $or: [{ username: username }, { email: email }],
+  });
+
+  if (!user) {
+    res.status(404).json({
+      message: "User not found",
+    });
+  }
+  const isPasswordCorrect = bcrypt.compare(password, user.password);
+
+  if (!isPasswordCorrect) {
+    return res.status(404).json({
+      message: "Invalid Password",
+    });
+  }
+
+  const token = jwt.sign(
+    {
+      id: user._id,
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: "id" },
+  );
+
+  res.cookie("jwt_token", token);
+});
+
 module.exports = authRouter;
