@@ -44,6 +44,13 @@ authRouter.post("/register", async (req, res) => {
 
   res.status(201).json({
     message: "User Created Successfully",
-    user,
+    user: {
+      username: user.username,
+      email: user.email,
+      bio: user.bio,
+      profileImage: user.profileImage,
+    },
   });
 });
+
+module.exports = authRouter;
