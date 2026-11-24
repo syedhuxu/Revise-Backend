@@ -66,7 +66,7 @@ authRouter.post("/login", async (req, res) => {
       message: "User not found",
     });
   }
-  const isPasswordCorrect = bcrypt.compare(password, user.password);
+  const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
   if (!isPasswordCorrect) {
     return res.status(404).json({
@@ -79,10 +79,20 @@ authRouter.post("/login", async (req, res) => {
       id: user._id,
     },
     process.env.JWT_SECRET,
-    { expiresIn: "id" },
+    { expiresIn: "1d" },
   );
 
   res.cookie("jwt_token", token);
+
+  res.status(200).json({
+    message: "User Logged In",
+    user: {
+      username: user.username,
+      email: user.email,
+      bio: user.bio,
+      profileImage: user.profileImage,
+    },
+  });
 });
 
 module.exports = authRouter;
