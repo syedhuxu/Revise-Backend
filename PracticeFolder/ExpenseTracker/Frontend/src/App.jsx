@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import api from "./api/axios";
 
 function App() {
   const [isLoginLoading, setIsLoginLoading] = useState(false);
@@ -15,28 +15,27 @@ function App() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    if (!name.trim() || !email.trim() || !password.trim()) return;
+    if (isRegisterLoading) return;
+    if (!name.trim() || !email.trim() || !password.trim()) {
+      setRegisterError("Please fill in all fields.");
+      return;
+    }
+    setRegisterError("");
+
     try {
       setIsRegisterLoading(true);
-      const res = await axios.post("http://localhost:3000/api/auth/register", {
-        name,
-        email,
-        password,
-      });
+      const res = await api.post("/auth/register", { name, email, password });
       console.log(res.data);
       setName("");
       setEmail("");
       setPassword("");
       setRegisterError("");
     } catch (err) {
-      console.error("Failed to create note:", err);
+      console.error("Failed to register", err);
       setRegisterError(
         err.response?.data?.message ||
           "Something went wrong. Please try again.",
       );
-      setName("");
-      setEmail("");
-      setPassword("");
     } finally {
       setIsRegisterLoading(false);
     }
@@ -44,25 +43,32 @@ function App() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    if (!loginEmail.trim() || !loginPassword.trim()) return;
+    if (isLoginLoading) return;
+
+    if (!loginEmail.trim() || !loginPassword.trim()) {
+      setLoginError("Please fill in all fields.");
+      return;
+    }
+
+    setLoginError("");
     try {
       setIsLoginLoading(true);
-      const res = await axios.post("http://localhost:3000/api/auth/login", {
+      const res = await api.post("/auth/login", {
         email: loginEmail,
         password: loginPassword,
       });
+
       console.log(res.data);
       setLoginEmail("");
       setLoginPassword("");
       setLoginError("");
     } catch (err) {
-      console.error("Failed to create note:", err);
+      console.error("Failed to login", err);
+
       setLoginError(
         err.response?.data?.message ||
           "Something went wrong. Please try again.",
       );
-      setLoginEmail("");
-      setLoginPassword("");
     } finally {
       setIsLoginLoading(false);
     }
@@ -73,11 +79,7 @@ function App() {
       <div className="registration-container">
         <h1>Register</h1>
         <div className="register-form">
-          <form
-            onSubmit={(e) => {
-              handleRegister(e);
-            }}
-          >
+          <form onSubmit={handleRegister}>
             <input
               type="text"
               value={name}
@@ -110,12 +112,8 @@ function App() {
       </div>
       <div className="loginAccount-container">
         <h1>Login</h1>
-        <div className="register-form">
-          <form
-            onSubmit={(e) => {
-              handleLogin(e);
-            }}
-          >
+        <div className="login-form">
+          <form onSubmit={handleLogin}>
             <input
               type="email"
               value={loginEmail}
