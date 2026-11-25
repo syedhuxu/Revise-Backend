@@ -1,10 +1,16 @@
 // --REQUIREMENTS--
 const express = require("express");
 const postController = require("../controllers/post.controller");
+const multer = require("multer");
+const upload = multer({ storage: multer.memoryStorage() });
 
 const postRouter = express.Router();
 
 // --CREATE-POST API--
-postRouter.post("/", postController.createPostController);
+postRouter.post(
+  "/",
+  upload.single("image"),
+  postController.createPostController,
+);
 
 module.exports = postRouter;
