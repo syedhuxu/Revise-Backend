@@ -1,5 +1,7 @@
 import { useState } from "react";
-import api from "./api/axios";
+import api from "../api/axios";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 function LoginRegister() {
   const [isLoginLoading, setIsLoginLoading] = useState(false);
@@ -8,6 +10,9 @@ function LoginRegister() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [registerError, setRegisterError] = useState("");
+
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
@@ -30,6 +35,8 @@ function LoginRegister() {
       setEmail("");
       setPassword("");
       setRegisterError("");
+      login(res.data);
+      navigate("/home");
     } catch (err) {
       console.error("Failed to register", err);
       setRegisterError(
@@ -62,6 +69,8 @@ function LoginRegister() {
       setLoginEmail("");
       setLoginPassword("");
       setLoginError("");
+      login(res.data);
+      navigate("/home");
     } catch (err) {
       console.error("Failed to login", err);
 
