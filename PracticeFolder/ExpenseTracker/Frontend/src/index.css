@@ -12,3 +12,233 @@ body {
 a {
   text-decoration: none;
 }
+
+:root {
+  --slate: #6c7a89;
+  --slate-hover: #5a6775;
+  --slate-active: #4c5763;
+  --slate-soft: rgba(108, 122, 137, 0.08);
+  --slate-border: rgba(108, 122, 137, 0.2);
+  --slate-ring: rgba(108, 122, 137, 0.22);
+  --white: #ffffff;
+  --text-dark: #2c353d;
+  --text-muted: #7f8c99;
+  --error-text: #b91c1c;
+  --error-bg: #fef2f2;
+  --error-border: rgba(185, 28, 28, 0.2);
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+  background-color: #f4f6f8;
+  color: var(--text-dark);
+  -webkit-font-smoothing: antialiased;
+}
+
+main {
+  min-height: 100vh;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: center;
+  align-content: center;
+  gap: 2rem;
+  padding: 3rem 1.5rem;
+  background:
+    radial-gradient(
+      circle at 15% 20%,
+      rgba(108, 122, 137, 0.1),
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 85% 80%,
+      rgba(108, 122, 137, 0.08),
+      transparent 45%
+    ),
+    #f5f7f9;
+}
+
+/* Shared Card Styles */
+.registration-container,
+.loginAccount-container {
+  flex: 1 1 340px;
+  max-width: 420px;
+  background-color: var(--white);
+  border: 1px solid var(--slate-border);
+  border-top: 4px solid var(--slate);
+  border-radius: 16px;
+  padding: 2.25rem 2rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow:
+    0 12px 32px rgba(108, 122, 137, 0.08),
+    0 2px 6px rgba(108, 122, 137, 0.04);
+  transition:
+    transform 0.25s var(--ease),
+    box-shadow 0.25s var(--ease);
+}
+
+.registration-container:hover,
+.loginAccount-container:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 18px 40px rgba(108, 122, 137, 0.12),
+    0 4px 10px rgba(108, 122, 137, 0.05);
+}
+
+.registration-container h1,
+.loginAccount-container h1 {
+  margin: 0 0 1.75rem;
+  font-size: 1.65rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--slate);
+}
+
+.register-form,
+.login-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.register-form form,
+.login-form form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.register-form input,
+.login-form input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: var(--text-dark);
+  background-color: var(--white);
+  border: 1.5px solid var(--slate-border);
+  border-radius: 10px;
+  outline: none;
+  transition:
+    border-color 0.2s var(--ease),
+    box-shadow 0.2s var(--ease),
+    background-color 0.2s var(--ease);
+}
+
+.register-form input::placeholder,
+.login-form input::placeholder {
+  color: var(--text-muted);
+}
+
+.register-form input:hover,
+.login-form input:hover {
+  border-color: rgba(108, 122, 137, 0.45);
+}
+
+.register-form input:focus,
+.login-form input:focus {
+  border-color: var(--slate);
+  box-shadow: 0 0 0 4px var(--slate-ring);
+}
+
+.register-form button[type="submit"],
+.login-form button[type="submit"] {
+  margin-top: auto;
+  padding: 0.9rem 1.25rem;
+  font-size: 0.975rem;
+  font-weight: 600;
+  font-family: inherit;
+  letter-spacing: 0.01em;
+  color: var(--white);
+  background-color: var(--slate);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s var(--ease),
+    transform 0.15s var(--ease),
+    box-shadow 0.2s var(--ease),
+    opacity 0.2s var(--ease);
+  box-shadow: 0 4px 12px rgba(108, 122, 137, 0.24);
+}
+
+.register-form button[type="submit"]:hover:not(:disabled),
+.login-form button[type="submit"]:hover:not(:disabled) {
+  background-color: var(--slate-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(108, 122, 137, 0.3);
+}
+
+.register-form button[type="submit"]:active:not(:disabled),
+.login-form button[type="submit"]:active:not(:disabled) {
+  background-color: var(--slate-active);
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(108, 122, 137, 0.2);
+}
+
+.register-form button[type="submit"]:focus-visible,
+.login-form button[type="submit"]:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px var(--slate-ring);
+}
+
+.register-form button[type="submit"]:disabled,
+.login-form button[type="submit"]:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.register-error-message,
+.login-error-message {
+  margin: 0.25rem 0 0;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--error-text);
+  background-color: var(--error-bg);
+  border: 1px solid var(--error-border);
+  border-radius: 8px;
+  animation: fadeSlideIn 0.2s var(--ease);
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  main {
+    padding: 2rem 1rem;
+    gap: 1.5rem;
+  }
+
+  .registration-container,
+  .loginAccount-container {
+    max-width: 100%;
+    padding: 1.75rem 1.5rem;
+  }
+}

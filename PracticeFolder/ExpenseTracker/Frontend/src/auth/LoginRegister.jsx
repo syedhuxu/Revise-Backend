@@ -1,6 +1,6 @@
 import { useState } from "react";
 import api from "../api/axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 function LoginRegister() {
@@ -12,7 +12,7 @@ function LoginRegister() {
   const [registerError, setRegisterError] = useState("");
 
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { user, login } = useAuth();
 
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
@@ -83,6 +83,9 @@ function LoginRegister() {
     }
   };
 
+  if (user) {
+    return <Navigate to="/home" replace />;
+  }
   return (
     <main>
       <div className="registration-container">
