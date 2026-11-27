@@ -27,6 +27,16 @@ const createPostController = async (req, res) => {
   });
 
   res.send(file);
+
+  const post = postModel.create({
+    caption: req.body.caption,
+    imageUrl: file.url,
+    user: decoded.id,
+  });
+
+  res.status(201).json({
+    message: "Post Created...",
+  });
 };
 
 module.exports = {
