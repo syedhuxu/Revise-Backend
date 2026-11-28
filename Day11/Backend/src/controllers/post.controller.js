@@ -45,6 +45,27 @@ const createPostController = async (req, res) => {
 
 const getPostController = async (req, res) => {
   const token = req.cookies.jwt_token;
+
+  let decoded = null;
+
+  try {
+    decoded = jwt.verify(token, process.env.JWT_SECRET);
+  } catch (error) {
+    return res.status(401).json({
+      message: "Token invalid",
+    });
+  }
+
+  const userId = decoded.id;
+
+  const posts = await postModel.find({
+    user: userId,
+  });
+
+  res.status(200).json({
+    message: "Posts fetched Successfully",
+    posts,
+  });
 };
 
 module.exports = {
