@@ -16,4 +16,8 @@ postRouter.post(
 // --GET-POST API--
 postRouter.get("/", postController.getPostController);
 
+// --POST-DETAILS API--
+
+postRouter.get("/details/:postId", postController.getPostDetailsController);
+
 module.exports = postRouter;

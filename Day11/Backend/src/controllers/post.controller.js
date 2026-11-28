@@ -45,7 +45,11 @@ const createPostController = async (req, res) => {
 
 const getPostController = async (req, res) => {
   const token = req.cookies.jwt_token;
-
+  if (!token) {
+    return res.status(401).json({
+      message: "UnAuthorized Access , token required",
+    });
+  }
   let decoded = null;
 
   try {
@@ -68,7 +72,37 @@ const getPostController = async (req, res) => {
   });
 };
 
+const getPostDetailsController = async (req, res) => {
+  const token = req.cookies.jwt_token;
+  if (!token) {
+    return res.status(401).json({
+      message: "UnAuthorized Access , token required",
+    });
+  }
+  let decoded = null;
+
+  try {
+    decoded = jwt.verify(token, process.env.JWT_SECRET);
+  } catch (error) {
+    return res.status(401).json({
+      message: "Token invalid",
+    });
+  }
+
+  const userId = decoded.id;
+  const postId = req.params.postId;
+
+  const post = await postModel.findById(postId);
+
+  if (!post) {
+    return res.status(404).json({
+      message: "Post Not Found",
+    });
+  }
+};
+
 module.exports = {
   createPostController,
   getPostController,
+  getPostDetailsController,
 };
