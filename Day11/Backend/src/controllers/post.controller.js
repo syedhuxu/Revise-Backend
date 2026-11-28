@@ -43,6 +43,11 @@ const createPostController = async (req, res) => {
   });
 };
 
+const getPostController = async (req, res) => {
+  const token = req.cookies.jwt_token;
+};
+
 module.exports = {
   createPostController,
+  getPostController,
 };

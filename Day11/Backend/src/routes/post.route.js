@@ -13,4 +13,7 @@ postRouter.post(
   postController.createPostController,
 );
 
+// --GET-POST API--
+postRouter.get("/", postController.getPostController);
+
 module.exports = postRouter;
